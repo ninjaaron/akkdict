@@ -1,0 +1,47 @@
+akkdict
+-------
+`akkdict.py` is a simple command-line python program that takes an
+akkadian word as input and opens pdfs of several akkadian dictionaries
+to the right page (or somewhere thereabouts). It works well for some of
+the illicit pdfs of _The Concise Dictionary of Akkdian_ (CDA) and _Das
+Akkadishes Handwörterbuch_ (AHw) floating around, if you happen to have
+them.  It also will get you within 100 pages in the _Assyrian Dictionary
+of the Oriental Institute of the University of Chicago_ (CAD), which can
+be freely downloaded from
+http://oi.uchicago.edu/research/publications/assyrian-dictionary-oriental-institute-university-chicago-cad
+if you would like to contribute to expanding and improving the CAD index
+or any of the other indicies, we would be happy to pull from you! If you
+are a humanities major and using git is too hard, contact me!
+
+dependencies
+~~~~~~~~~~~~
+`akkdict.py` requires:
+
+- Python 3
+- PyYaml
+
+If you are on any form of *nix, you should be able to get Python 3 from
+your package manager (homebrew, on OS X), and PyYaml can be downloaded
+from PyPI if it's not also in the package manager. I don't know how to
+use Windows but I'm sure you can get it sorted if you do a google
+search.
+
+installation
+~~~~~~~~~~~~
+
+. Clone this repo or download and unzip the zip.
+. move copies of (or make symlinks to) your akkadian dictionary PDFs in
+  the `akkdict/dicts` directory. All of the volumes of the CAD should be
+  in a subdirectory within this folder -- `akkdict/dicts/CAD/`, is
+  default, but though you can manually set the name in the configuration
+  file.
+. copy conf.yml to the file \~/.akkdict and edit it for your system. The
+  default PDF reader is `zathura`, which is my favorite, but you will
+  probably want to change that. This requires knowing how to run your
+  PDF reader from the command line. Good luck! Comment out or delete any
+  lines in the config file for dictionaries you don't have. You may
+  optionally wish to link akkdict.py to somewhere in your PATH. Don't
+  move the original file out of the akkdict folder. It will break.
+
+Someday, this may be a package on PyPI which you can just install with
+minimal configuration. Today is not that day. Good Luck!
