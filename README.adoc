@@ -18,13 +18,11 @@ dependencies
 `akkdict.py` requires:
 
 - Python 3
-- PyYaml
 
 If you are on any form of *nix, you should be able to get Python 3 from
-your package manager (homebrew, on OS X), and PyYaml can be downloaded
-from PyPI if it's not also in the package manager. I don't know how to
-use Windows but I'm sure you can get it sorted if you do a google
-search.
+your package manager (homebrew, on OS X). I don't know how to use
+Windows but I'm sure you can get it sorted if you do a search. Unless
+the Unicode stuff is batty.
 
 installation
 ~~~~~~~~~~~~
@@ -35,13 +33,13 @@ installation
   in a subdirectory within this folder -- `akkdict/dicts/CAD/`, is
   default, but though you can manually set the name in the configuration
   file.
-. copy conf.yml to the file \~/.akkdict and edit it for your system. The
-  default PDF reader is `zathura`, which is my favorite, but you will
-  probably want to change that. This requires knowing how to run your
-  PDF reader from the command line. Good luck! Comment out or delete any
-  lines in the config file for dictionaries you don't have. You may
-  optionally wish to link akkdict.py to somewhere in your PATH. Don't
-  move the original file out of the akkdict folder. It will break.
+. copy the conf.ini to the file \~/.akkdictrc and edit it for your system.
+  The default PDF reader is `zathura`, which is my favorite, but you will
+  probably want to change that. This requires knowing how to run your PDF
+  reader from the command line. Good luck! Comment out or delete any lines
+  in the config file for dictionaries you don't have. You may optionally
+  wish to link akkdict.py to somewhere in your PATH. Don't move the
+  original file out of the akkdict folder. It will break.
 
 Someday, this may be a package on PyPI which you can just install with
 minimal configuration. Today is not that day. Good Luck!
