@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 import sys
+import pkg_resources
 from unicodedata import normalize as un
 
-INDEX_PATH = sys.path[0] + '/indicies/'
 DICT_NAMES = 'cad', 'ahw', 'cda'
 INDICIES = {}
+RM = pkg_resources.ResourceManager()
 for dict_ in DICT_NAMES:
-    INDICIES[dict_] = [l.rstrip().split(',')
-                       for l in open(INDEX_PATH + dict_ + '.csv')]
+    with RM.resource_stream('akkdict', 'indicies/' +dict_ + '.csv') as f:
+        INDICIES[dict_] = [l.decode().rstrip().split(',') for l in f]
+
 del dict_
 CHARS = {c: i for i, c in enumerate('abdeghijklmnpqrsṣštṭuwyz')}
 _sortkey = lambda word: [CHARS[c] for c in word[0].lower()]

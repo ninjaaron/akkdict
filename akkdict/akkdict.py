@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-import sys, os
+import os
+import shutil
+import click
 import shlex
 import configparser
-import pagefinder as f
+from .pagefinder import lookup
 from subprocess import Popen
 home = os.environ['HOME']
 
@@ -18,21 +20,22 @@ def opendictionaries(query, dicts, command):
                 path += '/'
             path, page = cadfind(path)
         else:
-             page = f.lookup(name, query)
+             page = lookup(name, query)
         Popen(shlex.split(command.format(page=page, file=path)))
 
 
 def cadfind(path):
     """work a little on the pagefinder output for CAD"""
-    cad_vol, page = f.lookup('cad', query).split()
+    cad_vol, page = lookup('cad', query).split()
     for file_ in os.listdir(path):
         if cad_vol + '.pdf' in file_:
             path += file_
             return (path, page)
 
-
-if __name__ == '__main__':
-    query = sys.argv[1]
+@click.command()
+@click.argument('query')
+def main(query):
+    '''look up Akkadian words in the CAD and other dictionaries'''
     cfg = configparser.ConfigParser()
     try:
         cfg.read(home + '/.akkdictrc')

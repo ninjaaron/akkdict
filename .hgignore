@@ -1,2 +1,4 @@
 tags
 __pycache__
+dist
+venv
