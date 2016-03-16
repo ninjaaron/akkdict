@@ -2,3 +2,4 @@ tags
 __pycache__
 dist
 venv
+akkdict.egg-info

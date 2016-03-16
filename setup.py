@@ -5,6 +5,6 @@ setup(
     version='0.0.0',
     packages=['akkdict'],
     install_requires=['Click'],
-    include_package_data=True,
+    package_data={'akkdict': ['indicies/*.csv', 'conf.ini']},
     entry_points={'console_scripts': ['akkdict=akkdict.akkdict:main']},
     )
