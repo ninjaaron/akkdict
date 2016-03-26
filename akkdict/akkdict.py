@@ -56,13 +56,11 @@ def main(query, p, download_cad):
     if not cfg.read(home + '/.akkdictrc'):
         print("Oops! you don't have a config file yet!",
               'Creating ~/.akkdictrc...')
-        exit()
-    else:
         from pkg_resources import ResourceManager
         rm = ResourceManager()
         shutil.copy(rm.resource_filename('akkdict', 'conf.ini'),
                     home + '/.akkdictrc')
         print('Now, go edit ~/.akkdictrc for your local setup and then try',
               'the command again!')
-        exit()
-    opendictionaries(query, cfg['dicts'], cfg['conf']['command'])
+    else:
+        opendictionaries(query, cfg['dicts'], cfg['conf']['command'])
