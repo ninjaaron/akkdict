@@ -4,6 +4,7 @@ setup(
     name='akkdict',
     version='0.0.2',
     author='Aaron Christianson',
+    license='BSD',
     author_email='ninjaaron@gmail.com',
     url='https://github.com/ninjaaron/akkdict',
     description='simple utility for looking up Akkadian words in the CAD',
