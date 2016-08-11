@@ -1,5 +1,6 @@
 tags
+*.whl
 __pycache__
 dist
-venv
+venv*
 akkdict.egg-info
