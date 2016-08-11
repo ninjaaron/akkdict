@@ -1,9 +1,17 @@
-import os
+import os, sys
 import shlex
 import click
-from .pagefinder import lookup
+from . import pagefinder
 from subprocess import Popen
 home = os.environ['HOME']
+
+
+def lookup(dict, query):
+    try:
+        return pagefinder.lookup(dict, query)
+    except ValueError as e:
+        print(e, file=sys.stderr)
+        exit(2)
 
 
 def opendictionaries(query, dicts, command):
@@ -16,7 +24,7 @@ def opendictionaries(query, dicts, command):
                 path += '/'
             path, page = cadfind(query, path)
         else:
-             page = lookup(name, query)
+            page = lookup(name, query)
         Popen(shlex.split(command.format(page=page, file=path)))
 
 
@@ -47,7 +55,7 @@ def main(query, p, download_cad):
         download()
         exit()
     if not query:
-        print('missing argument [query].')
+        print('missing argument [query].', file=sys.stderr)
         exit(1)
     if p:
         print(lookup('cad', query))
@@ -55,12 +63,13 @@ def main(query, p, download_cad):
     cfg = configparser.ConfigParser()
     if not cfg.read(home + '/.akkdictrc'):
         print("Oops! you don't have a config file yet!",
-              'Creating ~/.akkdictrc...')
+              'Creating ~/.akkdictrc...', file=sys.stderr)
         from pkg_resources import ResourceManager
         rm = ResourceManager()
         shutil.copy(rm.resource_filename('akkdict', 'conf.ini'),
                     home + '/.akkdictrc')
         print('Now, go edit ~/.akkdictrc for your local setup and then try',
-              'the command again!')
+              'the command again!', file=sys.stderr)
+        exit(1)
     else:
         opendictionaries(query, cfg['dicts'], cfg['conf']['command'])
