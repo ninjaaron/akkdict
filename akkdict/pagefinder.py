@@ -9,7 +9,9 @@ INDICIES = {}
 RM = pkg_resources.ResourceManager()
 for dict_ in DICT_NAMES:
     with RM.resource_stream('akkdict', 'indicies/' +dict_ + '.csv') as f:
-        INDICIES[dict_] = [l.decode().rstrip().split(',') for l in f]
+        # INDICIES[dict_] = [l.decode().rstrip().split(',') for l in f]
+        INDICIES[dict_] = [l.split(',') for l in
+                           map(str.rstrip, map(bytes.decode, f))]
 
 del dict_
 CHARS = {c: i for i, c in enumerate('abdeghijklmnpqrsṣštṭuwyz')}
