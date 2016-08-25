@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import pkg_resources
 import unicodedata as ud
 
-DICT_NAMES = 'cad', 'ahw', 'cda'
+DICT_NAMES = 'ahw', 'cda'
 INDICIES = {}
 RM = pkg_resources.ResourceManager()
 for dict_ in DICT_NAMES:
@@ -13,9 +14,15 @@ for dict_ in DICT_NAMES:
         INDICIES[dict_] = [l.split(',') for l in
                            map(str.rstrip, map(bytes.decode, f))]
 
+with os.environ['HOME']+'/.cache/akkdict/cat.csv' as f:
+    INDICIES['cad'] = [l.decode().rstrip().split(',') for l in f]
+
 del dict_
 CHARS = {c: i for i, c in enumerate('abdeghijklmnpqrsṣštṭuwyz')}
-_sortkey = lambda word: [CHARS[c] for c in word[0]]
+
+
+def _sortkey(word):
+    return [CHARS[c] for c in word[0].lower()]
 
 
 def fix_query(query: str) -> str:
