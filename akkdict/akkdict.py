@@ -2,8 +2,55 @@ import os, sys
 import shlex
 import click
 from . import pagefinder
-from subprocess import Popen
-home = os.environ['HOME']
+import subprocess
+HOME = os.environ['HOME']
+expanduser = os.path.expanduser
+
+
+class Configs:
+    def __init__(self, path=None):
+        if path:
+            self.path = expanduser(path)
+        else:
+
+            for path in map(
+                  expanduser, ('~/.config/akkdict/conf.ini', '~/.akkdictrc')):
+                if os.path.exists(path):
+                    self.path = path
+                    break
+            else:
+                raise FileNotFoundError('config file not found')
+
+        self.cfg = configparser.ConfigParser()
+        self.cfg.read(self.path)
+        self.cfg['dicts'] = \
+                {k: expanuser(v) for k, v in self.cfg['dicts'].items()}
+
+    def __getitem__(self, key):
+        return self.cfg[key]
+
+    def __setitem__(self, key, value):
+        self.cfg[key] = value
+
+    def __delitem__(self, key):
+        del self.cfg[value]
+
+    def __getattr__(self, name):
+        return getattr(self.cfg, name)
+
+    def write(self):
+        self.cfg.write(open(self.path, 'w'))
+
+
+def create_config(self):
+    try:
+        os.mkdir(expanduser('~/.config/akkdict'))
+    except FileExistsError:
+        pass
+    from pkg_resources import ResourceManager
+    rm = ResourceManager()
+    shutil.copy(rm.resource_filename('akkdict', 'conf.ini'),
+                expanduser('~/.config/akkdict/conf.ini'))
 
 
 def lookup(dict, query):
@@ -17,15 +64,13 @@ def lookup(dict, query):
 def opendictionaries(query, dicts, command):
     for name, path in dicts.items():
         name = name.lower()
-        if path[0] == '~':
-            path = path.replace('~', home, 1)
         if name == 'cad':
             if not path[-1] == '/':
                 path += '/'
             path, page = cadfind(query, path)
         else:
             page = lookup(name, query)
-        Popen(shlex.split(command.format(page=page, file=path)))
+        subprocess.Popen(shlex.split(command.format(page=page, file=path)))
 
 
 def cadfind(query, path):
@@ -60,6 +105,7 @@ def main(query, p, download_cad, updat_cad_index):
 
     if updat_cad_index:
         # hit that dang webserver I still have to write
+        print('updating from the remote index is not yet supported')
 
     if not query:
         print('missing argument [query].', file=sys.stderr)
@@ -69,19 +115,11 @@ def main(query, p, download_cad, updat_cad_index):
         print(lookup('cad', query))
         exit()
 
-    cfg = configparser.ConfigParser()
-    if not cfg.read(home + '/.config/akkdict/conf.ini'):
+    try:
+        cfg = Configs()
+    except FileNotFoundError:
         print("Oops! you don't have a config file yet!",
               'Creating ~/.config/akkdict...')
-        try:
-            os.mkdir(HOME+'/.config/akkdict')
-            os.mkdir(HOME+'/.cache/akkdict')
-        except FileExistsError:
-            pass
-        from pkg_resources import ResourceManager
-        rm = ResourceManager()
-        shutil.copy(rm.resource_filename('akkdict', 'conf.ini'),
-                    home + '/.config/akkdict/conf.ini')
         print('Now, go edit ~/.config/akkdict/conf.ini for your local setup',
               'and then try the command again!')
         exit(1)
