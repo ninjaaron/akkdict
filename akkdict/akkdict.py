@@ -3,7 +3,6 @@ import shlex
 import click
 from . import pagefinder
 import subprocess
-HOME = os.environ['HOME']
 expanduser = os.path.expanduser
 
 
@@ -24,7 +23,7 @@ class Configs:
         self.cfg = configparser.ConfigParser()
         self.cfg.read(self.path)
         self.cfg['dicts'] = \
-                {k: expanuser(v) for k, v in self.cfg['dicts'].items()}
+                {k: expanduser(v) for k, v in self.cfg['dicts'].items()}
 
     def __getitem__(self, key):
         return self.cfg[key]
@@ -42,15 +41,16 @@ class Configs:
         self.cfg.write(open(self.path, 'w'))
 
 
-def create_config(self):
-    try:
-        os.mkdir(expanduser('~/.config/akkdict'))
-    except FileExistsError:
-        pass
+def create_config():
+    os.makedirs(expanduser('~/.config/akkdict'), exists_ok=True)
     from pkg_resources import ResourceManager
-    rm = ResourceManager()
-    shutil.copy(rm.resource_filename('akkdict', 'conf.ini'),
+    r = ResourceManager()
+    shutil.copy(r.resource_filename('akkdict', 'conf.ini'),
                 expanduser('~/.config/akkdict/conf.ini'))
+
+    os.mkdirs(expanduser('~/.cache/akkdict'), exists_ok=True)
+    shutil.copy(r.resource_filename('akkdict', 'indicies/cad.csv'),
+                expanduser('~/.cache/akkdict/cad.csv'))
 
 
 def lookup(dict, query):
@@ -120,6 +120,7 @@ def main(query, p, download_cad, updat_cad_index):
     except FileNotFoundError:
         print("Oops! you don't have a config file yet!",
               'Creating ~/.config/akkdict...')
+        create_config()
         print('Now, go edit ~/.config/akkdict/conf.ini for your local setup',
               'and then try the command again!')
         exit(1)

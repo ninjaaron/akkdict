@@ -14,7 +14,7 @@ for dict_ in DICT_NAMES:
         INDICIES[dict_] = [l.split(',') for l in
                            map(str.rstrip, map(bytes.decode, f))]
 
-with os.environ['HOME']+'/.cache/akkdict/cat.csv' as f:
+with os.environ['HOME']+'/.cache/akkdict/cad.csv' as f:
     INDICIES['cad'] = [l.decode().rstrip().split(',') for l in f]
 
 del dict_
